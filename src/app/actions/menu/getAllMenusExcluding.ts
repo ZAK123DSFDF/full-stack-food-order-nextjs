@@ -1,21 +1,23 @@
 "use server";
-import { cookies } from "next/headers";
+import { prisma } from "../../../lib/prisma";
 export const getAllMenusExcluding = async (id: any) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/menu/exclude/${id}`,
-    {
-      method: "GET",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookies().toString(),
-      },
+  try {
+    const numericId = Number(id);
+
+    if (isNaN(numericId)) {
+      throw new Error("Invalid menu ID");
     }
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "failed to get menus");
+    const menus = await prisma.menu.findMany({
+      where: {
+        id: {
+          not: numericId,
+        },
+      },
+      include: { restaurant: true },
+    });
+
+    return menus;
+  } catch (error) {
+    throw new Error("failed to get menus");
   }
-  const bookData = await response.json();
-  return bookData;
 };

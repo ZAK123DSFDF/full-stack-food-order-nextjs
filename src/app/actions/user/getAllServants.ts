@@ -1,5 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { prisma } from "../../../lib/prisma";
 export const getAllServants = async (
   globalSearch: any,
   name: any,
@@ -10,27 +12,69 @@ export const getAllServants = async (
   sortBy: any,
   sortOrder: any
 ) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/auth/all?globalSearch=${
-      globalSearch ? globalSearch : ""
-    }&name=${name ? name : ""}&phoneNumber=${
-      phoneNumber ? phoneNumber : ""
-    }&email=${email ? email : ""}&location=${location ? location : ""}&active=${
-      active ? active : ""
-    }&sortBy=${sortBy ? sortBy : ""}&sortOrder=${sortOrder ? sortOrder : ""}`,
-    {
-      method: "GET",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookies().toString(),
-      },
+  try {
+    const tokenCookie = cookies().get("token");
+    if (!tokenCookie) {
+      return { isAuthenticated: false };
     }
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "failed to get servants data");
+
+    const token = tokenCookie.value;
+    const decodedToken = jwt.decode(token) as JwtPayload | null;
+
+    if (!decodedToken || typeof decodedToken === "string") {
+      throw new Error("Invalid token");
+    }
+
+    const restaurantId = decodedToken.restaurantId;
+
+    const restaurantExists = await prisma.restaurant.findUnique({
+      where: { id: restaurantId },
+    });
+
+    if (!restaurantExists) {
+      throw new Error(`Restaurant with ID ${restaurantId} not found.`);
+    }
+    const whereCondition: any = {
+      role: "SERVANT",
+      restaurantId,
+    };
+    if (globalSearch) {
+      whereCondition.OR = [
+        { name: { contains: globalSearch, mode: "insensitive" } },
+        { phoneNumber: { contains: globalSearch, mode: "insensitive" } },
+        { email: { contains: globalSearch, mode: "insensitive" } },
+        { location: { contains: globalSearch, mode: "insensitive" } },
+      ];
+    }
+    if (name) {
+      whereCondition.name = { contains: name, mode: "insensitive" };
+    }
+    if (phoneNumber) {
+      whereCondition.phoneNumber = {
+        contains: phoneNumber,
+        mode: "insensitive",
+      };
+    }
+    if (email) {
+      whereCondition.email = { contains: email, mode: "insensitive" };
+    }
+    if (location) {
+      whereCondition.location = { contains: location, mode: "insensitive" };
+    }
+    if (active === "true" || active === "false") {
+      whereCondition.active = active === "true";
+    }
+    const orderBy: { [key: string]: "asc" | "desc" } = {};
+    if (sortBy) {
+      orderBy[sortBy] = sortOrder;
+    }
+    const servants = await prisma.user.findMany({
+      where: whereCondition,
+      orderBy: orderBy,
+    });
+
+    return servants;
+  } catch (error) {
+    throw new Error("error getting servants");
   }
-  const servantData = await response.json();
-  return servantData;
 };

@@ -1,5 +1,9 @@
 "use server";
 import { cookies } from "next/headers";
+import { z } from "zod";
+import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { prisma } from "../../../lib/prisma";
 export const createUser = async ({
   name,
   email,
@@ -7,29 +11,65 @@ export const createUser = async ({
   location,
   phoneNumber,
 }: any) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/auth/create`,
-    {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookies().toString(),
-      },
-      body: JSON.stringify({ name, email, password, location, phoneNumber }),
+  try {
+    const SignupSchema = z.object({
+      name: z.string().min(1, "Name is required").optional(),
+      email: z.string().email("Invalid email address"),
+      password: z.string().min(6, "Password must be at least 6 characters"),
+      location: z.string(),
+      phoneNumber: z.string(),
+      servantRole: z.array(z.string()).optional(),
+    });
+
+    const parsed = SignupSchema.safeParse({
+      name,
+      email,
+      password,
+      location,
+      phoneNumber,
+    });
+
+    if (!parsed.success) {
+      const errorMessages = parsed.error.errors
+        .map((err) => `${err.path.join(".")} - ${err.message}`)
+        .join(", ");
+      throw new Error(errorMessages);
     }
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "failed to check");
-  }
-  const userResData = await response.json();
-  if (userResData) {
+
+    const existUser = await prisma.user.findUnique({ where: { email } });
+    if (existUser) {
+      throw new Error("Email already exists");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        location,
+        phoneNumber,
+      },
+    });
+
+    const token = jwt.sign(
+      {
+        user: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.SECRET as string
+    );
+
     cookies().set({
       name: "token",
-      value: userResData.token,
+      value: token,
       httpOnly: true,
     });
+
+    return { user, token };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error signing up");
   }
-  return userResData;
 };

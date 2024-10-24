@@ -1,20 +1,24 @@
 "use server";
 import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+
 export const checkAuth = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/auth/check`,
-    {
-      method: "GET",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookies().toString(),
-      },
-    }
-  );
-  if (!response.ok) {
+  const tokenCookie = cookies().get("token");
+  if (!tokenCookie) {
     return { isAuthenticated: false };
   }
-  const authData = await response.json();
-  return authData;
+
+  const token = tokenCookie.value;
+  const decoded = jwt.decode(token);
+
+  if (decoded) {
+    return {
+      isAuthenticated: true,
+      id: (decoded as any).user,
+      email: (decoded as any).email,
+      role: (decoded as any).role,
+    };
+  }
+
+  return { isAuthenticated: false };
 };

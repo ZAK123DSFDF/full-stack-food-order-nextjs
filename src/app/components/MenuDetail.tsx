@@ -53,7 +53,7 @@ export default function MenuDetail({ data: data2 }: any) {
     },
   });
   const handleOrder = () => {
-    const selectedToppings = data.toppings?.filter(
+    const selectedToppings = data?.toppings?.filter(
       (_: any, index: any) => checkedToppings[index]
     );
     mutate({ menuId: params.id, count, toppings: selectedToppings });
@@ -87,12 +87,12 @@ export default function MenuDetail({ data: data2 }: any) {
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" }, // Flex column on extra small and small screens
+            flexDirection: { xs: "column", sm: "row" },
             gap: 2,
             marginTop: { xs: 20, md: 20, lg: 0 },
             justifyContent: "center",
             alignItems: "center",
-            width: "100%", // Ensure it takes full width
+            width: "100%",
           }}
         >
           {/* Main Image Box */}

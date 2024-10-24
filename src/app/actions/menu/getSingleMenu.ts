@@ -1,21 +1,17 @@
 "use server";
-import { cookies } from "next/headers";
+import { prisma } from "../../../lib/prisma";
+
 export const getSingleMenu = async (id: any) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/menu/single/${id}`,
-    {
-      method: "GET",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookies().toString(),
-      },
+  try {
+    const numericId = Number(id);
+
+    if (isNaN(numericId)) {
+      throw new Error("Invalid menu ID");
     }
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "failed to get menu");
+
+    const menu = await prisma.menu.findUnique({ where: { id: numericId } });
+    return menu;
+  } catch (error) {
+    throw new Error("Failed to get single menu");
   }
-  const singleMenu = await response.json();
-  return singleMenu;
 };
