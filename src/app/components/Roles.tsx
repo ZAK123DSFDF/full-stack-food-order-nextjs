@@ -226,6 +226,16 @@ export default function RoleManagement() {
       {
         accessorKey: "createdAt",
         header: "Created At",
+        Cell: ({ cell }) => {
+          const date = new Date(cell.getValue());
+          return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        },
       },
       {
         accessorKey: "active",

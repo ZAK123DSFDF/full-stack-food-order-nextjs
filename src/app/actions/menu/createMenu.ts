@@ -4,9 +4,31 @@ import { prisma } from "../../../lib/prisma";
 import sharp from "sharp";
 import { uploadToCloudinary } from "../../../lib/cloudinary";
 import { z } from "zod";
-
+import { cookies } from "next/headers";
+import jwt, { JwtPayload } from "jsonwebtoken";
 export const createMenu = async (formData: FormData) => {
   try {
+    const tokenCookie = cookies().get("token");
+    if (!tokenCookie) {
+      return { isAuthenticated: false };
+    }
+
+    const token = tokenCookie.value;
+    const decodedToken = jwt.decode(token) as JwtPayload | null;
+
+    if (!decodedToken || typeof decodedToken === "string") {
+      throw new Error("Invalid token");
+    }
+
+    const restaurantId = decodedToken.restaurantId;
+
+    const restaurantExists = await prisma.restaurant.findUnique({
+      where: { id: restaurantId },
+    });
+
+    if (!restaurantExists) {
+      throw new Error(`Restaurant with ID ${restaurantId} not found.`);
+    }
     const name = formData.get("name")?.toString();
     const price = formData.get("price")?.toString();
     const toppings = formData.getAll("toppings").map((top) => top.toString());
@@ -44,6 +66,7 @@ export const createMenu = async (formData: FormData) => {
     }
     const menu = await prisma.menu.create({
       data: {
+        restaurantId,
         name: parsed.data.name,
         price: parsed.data.price,
         toppings: parsed.data.toppings || [],

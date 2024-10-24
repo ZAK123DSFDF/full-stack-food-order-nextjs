@@ -116,7 +116,7 @@ export default function Orders() {
     if (data1) {
       setOrderData(data1);
       console.log(orderData);
-      setStatus(data1.map((order: any) => order.orderStatus || "PREPARING"));
+      setStatus(data1?.map((order: any) => order.orderStatus || "PREPARING"));
     }
   }, [data1, orderData]);
   useEffect(() => {
@@ -226,6 +226,16 @@ export default function Orders() {
       {
         accessorKey: "createdAt",
         header: "Created At",
+        Cell: ({ cell }) => {
+          const date = new Date(cell.getValue());
+          return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        },
       },
     ];
     if (hasPermissionToUpdateOrders) {

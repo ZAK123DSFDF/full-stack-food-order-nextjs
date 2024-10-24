@@ -7,10 +7,10 @@ import { prisma } from "../../../lib/prisma";
 export const createOrder = async ({ menuId, count, toppings }: any) => {
   try {
     const tokenCookie = cookies().get("token");
-    if (!tokenCookie) {
+    const token = tokenCookie?.value;
+    if (!token) {
       throw new Error("User is not authenticated");
     }
-    const token = tokenCookie.value;
     const decodedToken = jwt.decode(token) as JwtPayload | null;
     if (!decodedToken || typeof decodedToken === "string") {
       throw new Error("Invalid token");
