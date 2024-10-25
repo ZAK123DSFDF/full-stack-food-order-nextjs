@@ -51,7 +51,8 @@ export const getLogin = async ({ email, password }: any) => {
       restaurantId: user.restaurantId || null,
       servantRoleId: user.role === "SERVANT" ? user.servantRoleId : null,
     };
-  } catch (error) {
-    throw new Error("Error in signing in: ");
+  } catch (error: any) {
+    console.error("Error in signin:", error);
+    throw new Error(`Error signin: ${error?.message}`);
   }
 };
