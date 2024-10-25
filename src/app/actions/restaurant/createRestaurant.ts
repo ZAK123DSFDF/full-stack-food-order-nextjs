@@ -1,17 +1,13 @@
 "use server";
 import { uploadToCloudinary } from "@/lib/cloudinary";
-import { cookies } from "next/headers";
 import sharp from "sharp";
 import { z } from "zod";
 import { prisma } from "../../../lib/prisma";
 import * as bcrypt from "bcrypt";
+import { verifyToken } from "@/utils/verifyToken";
 export const createRestaurant = async (formData: any) => {
   try {
-    const tokenCookie = cookies().get("token");
-    const token = tokenCookie?.value;
-    if (!token) {
-      throw new Error("User is not authenticated");
-    }
+    await verifyToken();
     const name = formData.get("name").toString();
     const email = formData.get("email").toString();
     const password = formData.get("password").toString();

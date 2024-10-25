@@ -1,7 +1,12 @@
 "use server";
-import { cookies } from "next/headers";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../../../lib/prisma";
+import { verifyToken } from "@/utils/verifyToken";
+import { decodedToken } from "@/utils/decodeToken";
+import { defineAbilitiesFor } from "@/casl/abilities";
+import { checkAbilities } from "@/casl/checkAbilities";
+import { AllowedActions } from "@/utils/enum";
+import { All } from "@/classes/All";
+import { Role } from "@/classes/Role";
 export const getAllRoles = async (
   globalSearch: string,
   name: string,
@@ -11,87 +16,88 @@ export const getAllRoles = async (
   sortOrder: string
 ) => {
   try {
-    const tokenCookie = cookies().get("token");
-    if (!tokenCookie) {
-      return { isAuthenticated: false };
-    }
-    const token = tokenCookie.value;
-    const decodedToken = jwt.decode(token) as JwtPayload | null;
-    if (!decodedToken || typeof decodedToken === "string") {
-      throw new Error("Invalid token");
-    }
-    const restaurantId = decodedToken.restaurantId;
-    const restaurantExists = await prisma.restaurant.findUnique({
-      where: { id: restaurantId },
-    });
+    await verifyToken();
+    const token = await decodedToken();
+    const ability = await defineAbilitiesFor(token);
+    if (
+      (await checkAbilities(ability, AllowedActions.ALL, All)) ||
+      (await checkAbilities(ability, AllowedActions.GET_ROLES, Role))
+    ) {
+      const restaurantId = token.restaurantId;
+      const restaurantExists = await prisma.restaurant.findUnique({
+        where: { id: restaurantId },
+      });
 
-    if (!restaurantExists) {
-      throw new Error(`Restaurant with ID ${restaurantId} not found.`);
-    }
-    const filters: any = { restaurantId };
+      if (!restaurantExists) {
+        throw new Error(`Restaurant with ID ${restaurantId} not found.`);
+      }
+      const filters: any = { restaurantId };
 
-    if (globalSearch) {
-      const isDate = !isNaN(Date.parse(globalSearch));
+      if (globalSearch) {
+        const isDate = !isNaN(Date.parse(globalSearch));
 
-      filters.OR = [
-        {
-          name: {
-            contains: globalSearch,
+        filters.OR = [
+          {
+            name: {
+              contains: globalSearch,
+              mode: "insensitive",
+            },
+          },
+        ];
+
+        if (isDate) {
+          filters.OR.push({
+            createdAt: {
+              equals: new Date(globalSearch),
+            },
+          });
+        }
+      } else {
+        if (name) {
+          filters.name = {
+            contains: name,
             mode: "insensitive",
-          },
-        },
-      ];
-
-      if (isDate) {
-        filters.OR.push({
-          createdAt: {
-            equals: new Date(globalSearch),
-          },
-        });
-      }
-    } else {
-      if (name) {
-        filters.name = {
-          contains: name,
-          mode: "insensitive",
-        };
-      }
-
-      if (createdAt) {
-        const date = new Date(createdAt);
-        if (!isNaN(date.getTime())) {
-          const startOfDay = new Date(date.setHours(0, 0, 0, 0));
-          const endOfDay = new Date(date.setHours(23, 59, 59, 999));
-
-          filters.createdAt = {
-            gte: startOfDay,
-            lte: endOfDay,
           };
         }
-      }
-      if (active === "true" || active === "false") {
-        const isActive = active === "true";
-        filters.active = isActive;
-      }
-    }
-    const orderBy: { [key: string]: "asc" | "desc" } = {};
-    if (sortBy) {
-      orderBy[sortBy] = sortOrder === "desc" ? "desc" : "asc";
-    } else {
-      orderBy["name"] = "asc";
-    }
 
-    const roles = await prisma.servantRole.findMany({
-      where: {
-        restaurantId: filters.restaurantId,
-        OR: filters.OR,
-        name: filters.name,
-        createdAt: filters.createdAt,
-        active: filters.active,
-      },
-      orderBy: orderBy,
-    });
-    return roles;
+        if (createdAt) {
+          const date = new Date(createdAt);
+          if (!isNaN(date.getTime())) {
+            const startOfDay = new Date(date.setHours(0, 0, 0, 0));
+            const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+
+            filters.createdAt = {
+              gte: startOfDay,
+              lte: endOfDay,
+            };
+          }
+        }
+        if (active === "true" || active === "false") {
+          const isActive = active === "true";
+          filters.active = isActive;
+        }
+      }
+      const orderBy: { [key: string]: "asc" | "desc" } = {};
+      if (sortBy) {
+        orderBy[sortBy] = sortOrder === "desc" ? "desc" : "asc";
+      } else {
+        orderBy["name"] = "asc";
+      }
+
+      const roles = await prisma.servantRole.findMany({
+        where: {
+          restaurantId: filters.restaurantId,
+          OR: filters.OR,
+          name: filters.name,
+          createdAt: filters.createdAt,
+          active: filters.active,
+        },
+        orderBy: orderBy,
+      });
+      return roles;
+    } else {
+      throw new Error("you are not authorize to do this action");
+    }
   } catch (error) {
     throw new Error("error getting roles");
   }
