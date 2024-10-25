@@ -226,7 +226,7 @@ export default function RoleManagement() {
       {
         accessorKey: "createdAt",
         header: "Created At",
-        Cell: ({ cell }) => {
+        Cell: ({ cell }: any) => {
           const date = new Date(cell.getValue());
           return date.toLocaleDateString("en-US", {
             year: "numeric",

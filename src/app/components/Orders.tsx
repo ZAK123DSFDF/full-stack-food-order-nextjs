@@ -97,8 +97,8 @@ export default function Orders() {
   useEffect(() => {
     console.log("this is orders", data1);
   }, [data1]);
-  const [orderData, setOrderData] = useState([]);
-  const [status, setStatus] = useState([]);
+  const [orderData, setOrderData] = useState<any>([]);
+  const [status, setStatus] = useState<any>([]);
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: updateOrder,
@@ -226,7 +226,7 @@ export default function Orders() {
       {
         accessorKey: "createdAt",
         header: "Created At",
-        Cell: ({ cell }) => {
+        Cell: ({ cell }: any) => {
           const date = new Date(cell.getValue());
           return date.toLocaleDateString("en-US", {
             year: "numeric",
