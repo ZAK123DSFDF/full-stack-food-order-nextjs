@@ -195,7 +195,7 @@ export const getRestaurantOrders = async (
           customer: true,
         },
       });
-      orders.forEach((order) => {
+      orders.forEach((order: any) => {
         if (order.menu.restaurantId !== restaurantId) {
           throw new Error("You can only get orders from your restaurant");
         }
