@@ -9,7 +9,7 @@ import { getAllMenusExcluding } from "../actions/menu/getAllMenusExcluding";
 import { getOrderHistory } from "../actions/order/getOrderHistory";
 
 export default function Card({ id, mode, data: data1, data2 }: any) {
-  const queryFn = () => {
+  const queryFn = async (): Promise<any[]> => {
     if (mode === "allData") {
       return getAllMenus();
     } else if (mode === "menuDetails") {
@@ -17,6 +17,7 @@ export default function Card({ id, mode, data: data1, data2 }: any) {
     } else if (mode === "orderHistory") {
       return getOrderHistory();
     }
+    return [];
   };
 
   const { data, isLoading } = useQuery({
