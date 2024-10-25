@@ -52,7 +52,7 @@ export const getLogin = async ({ email, password }: any) => {
       servantRoleId: user.role === "SERVANT" ? user.servantRoleId : null,
     };
   } catch (error: any) {
-    console.error("Error in signin:", error);
+    console.error("Error in signin:", error.message);
     throw new Error(`Error signin: ${error?.message}`);
   }
 };
