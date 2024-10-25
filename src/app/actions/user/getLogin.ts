@@ -37,7 +37,7 @@ export const getLogin = async ({ email, password }: any) => {
     if (user.role === "SERVANT" && user.servantRoleId) {
       payload.servantRoleId = user.servantRoleId;
     }
-    const token = jwt.sign(payload, process.env.SECRET as string);
+    const token = jwt.sign(payload, process.env.secret as string);
 
     cookies().set({
       name: "token",

@@ -58,7 +58,7 @@ export const createUser = async ({
         email: user.email,
         role: user.role,
       },
-      process.env.SECRET as string
+      process.env.secret as string
     );
 
     cookies().set({
