@@ -14,6 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import BreadCrumbs from "./BreadCrumbs";
+import CloseIcon from "@mui/icons-material/Close";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import Radio from "@mui/material/Radio";
 import { useEffect, useMemo, useState } from "react";
 import {
   MaterialReactTable,
@@ -28,6 +31,7 @@ import { updateOrder } from "../actions/order/updateOrder";
 import useLocalStorage from "@/utils/useLocalStorage";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { Check, CheckCircleIcon } from "lucide-react";
 
 export default function Orders() {
   const [dialogData, setDialogData] = useState<any>(null);
@@ -58,6 +62,15 @@ export default function Orders() {
       setLoading(false);
     }, 500);
   });
+  const toppingColors = [
+    "#01c550",
+    "#c50101",
+    "#008000",
+    "#008077",
+    "#3f51b5",
+    "#2196f3",
+    "#03a9f4",
+  ];
   const {
     data: data1,
     isPending,
@@ -191,6 +204,7 @@ export default function Orders() {
               fontSize: "0.875rem",
               display: "flex",
               alignItems: "center",
+              textTransform: "none",
             }}
           >
             <IconButton
@@ -255,25 +269,28 @@ export default function Orders() {
                 },
               }}
             >
-              {/* <InputLabel shrink>Status</InputLabel> */}
               {status[rowIndex] !== "DELIVERED" ? (
                 <Select
                   value={status[rowIndex] || row.original.orderStatus}
                   onChange={(e) => {
-                    const updatedStatus: any = [...status];
+                    const updatedStatus = [...status];
                     updatedStatus[rowIndex] = e.target.value;
                     setStatus(updatedStatus);
                     handleUpdate(row.original.id, updatedStatus[rowIndex]);
                   }}
                   label=""
+                  displayEmpty
+                  renderValue={(selected) => (
+                    <span>
+                      {selected.charAt(0) + selected.slice(1).toLowerCase()}
+                    </span>
+                  )}
                   sx={{
                     backgroundColor:
                       status[rowIndex] === "PREPARING"
                         ? "orange"
                         : status[rowIndex] === "READY"
                         ? "darkgreen"
-                        : status[rowIndex] === "DELIVERED"
-                        ? "lightgreen"
                         : "inherit",
                     color: "#fff",
                     border: "none",
@@ -288,23 +305,51 @@ export default function Orders() {
                       color: "white",
                     },
                   }}
-                  displayEmpty
                 >
-                  <MenuItem value="PREPARING">PREPARING</MenuItem>
-                  <MenuItem value="READY">READY</MenuItem>
-                  <MenuItem value="DELIVERED">DELIVERED</MenuItem>
+                  {["PREPARING", "READY", "DELIVERED"].map((value) => (
+                    <MenuItem
+                      key={value}
+                      value={value}
+                      sx={{
+                        backgroundColor: "inherit",
+                        "&:hover": {
+                          backgroundColor: "inherit",
+                        },
+                        "&.Mui-selected": {
+                          backgroundColor: "inherit",
+                          "&:hover": {
+                            backgroundColor: "inherit",
+                          },
+                        },
+                      }}
+                    >
+                      {value.charAt(0) + value.slice(1).toLowerCase()}{" "}
+                      <Radio
+                        checked={status[rowIndex] === value}
+                        sx={{
+                          marginLeft: "auto",
+                          color: "black",
+                          "&.Mui-checked": {
+                            color: "black",
+                          },
+                        }}
+                      />
+                    </MenuItem>
+                  ))}
                 </Select>
               ) : (
                 <Typography
                   sx={{
-                    backgroundColor: "lightgreen",
-                    color: "#fff",
-                    padding: "6px 12px",
-                    borderRadius: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    color: "#000",
+                    gap: 2,
+                    padding: "6px 0",
                     fontSize: "0.875rem",
                   }}
                 >
-                  DELIVERED
+                  <Check color="#008000" />
+                  <Typography sx={{ color: "#008000" }}>Delivered</Typography>
                 </Typography>
               )}
             </FormControl>
@@ -464,21 +509,71 @@ export default function Orders() {
         >
           {dialogData && (
             <>
-              <DialogContent>
-                <Typography sx={{ mt: 2 }}>
-                  Toppings: {dialogData.toppings.join(", ")}
-                </Typography>
-              </DialogContent>
-              <DialogActions>
-                <Button
+              <DialogContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                  position: "relative",
+                }}
+              >
+                {/* Close Button */}
+                <IconButton
                   onClick={() => setDialogData(null)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{ borderColor: "#e57b0f", color: "#e57b0f" }}
+                  sx={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    backgroundColor: "transparent",
+                    border: "2px solid black",
+                    borderRadius: "50%",
+                    padding: "4px",
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.1)",
+                    },
+                  }}
                 >
-                  Close
-                </Button>
-              </DialogActions>
+                  <CloseIcon sx={{ color: "black" }} />
+                </IconButton>
+                <Typography
+                  sx={{ fontSize: 30, alignSelf: "center", fontWeight: "bold" }}
+                >
+                  Order Details
+                </Typography>
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <Typography sx={{ color: "#808080" }}>Name:</Typography>
+                  <Typography>{dialogData.menu.name}</Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    flexWrap: "wrap",
+                    alignItems: "flex-start",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <Typography sx={{ color: "#808080" }}>Toppings:</Typography>
+                  {dialogData.toppings.map((topping: any, index: any) => (
+                    <Box
+                      key={topping}
+                      sx={{
+                        padding: "4px 8px",
+                        borderRadius: "9999px",
+                        backgroundColor:
+                          toppingColors[index % toppingColors.length],
+                        color: "white",
+                      }}
+                    >
+                      {topping}
+                    </Box>
+                  ))}
+                </Box>
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <Typography sx={{ color: "#808080" }}>Count:</Typography>
+                  <Typography>{dialogData.count}</Typography>
+                </Box>
+              </DialogContent>
             </>
           )}
         </Dialog>

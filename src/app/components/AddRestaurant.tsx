@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useDropzone } from "react-dropzone";
 import { useState, useEffect } from "react";
 import { createRestaurant } from "../actions/restaurant/createRestaurant";
+import { Check } from "lucide-react";
 
 export default function Signup() {
   const {
@@ -357,18 +358,62 @@ export default function Signup() {
           }}
         ></Box>
       </Box>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Restaurant Created</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Your restaurant has been successfully created!
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        PaperProps={{
+          sx: {
+            borderRadius: "20px",
+            overflow: "hidden",
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 8,
+            gap: 4,
+          }}
+        >
+          <Box
+            sx={{
+              width: 200,
+              height: 200,
+              backgroundColor: "#e6f9e6",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: 120,
+                height: 120,
+                backgroundColor: "#05c605",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Check color="white" size={100} />
+            </Box>
+          </Box>
+          <Typography
+            sx={{
+              fontSize: 25,
+              textAlign: "center",
+              color: "#05c605",
+              fontWeight: "bold",
+            }}
+          >
+            You have created the Restaurant successfully!
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
     </Box>
   );

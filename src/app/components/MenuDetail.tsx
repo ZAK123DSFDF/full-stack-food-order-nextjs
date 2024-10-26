@@ -7,8 +7,9 @@ import {
   Typography,
   Dialog,
   DialogTitle,
+  DialogContent,
 } from "@mui/material";
-import { Minus, Plus } from "lucide-react";
+import { Check, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Card from "./Card";
@@ -325,13 +326,62 @@ export default function MenuDetail({ data: data2 }: any) {
       </Box>
 
       {/* Success Modal */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>You&#39;ve ordered the product successfully!</DialogTitle>
-        <Box sx={{ padding: 2 }}>
-          <Button variant="contained" onClick={handleClose}>
-            Close
-          </Button>
-        </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            borderRadius: "20px",
+            overflow: "hidden",
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 8,
+            gap: 4,
+          }}
+        >
+          <Box
+            sx={{
+              width: 200,
+              height: 200,
+              backgroundColor: "#e6f9e6",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: 120,
+                height: 120,
+                backgroundColor: "#05c605",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Check color="white" size={100} />
+            </Box>
+          </Box>
+          <Typography
+            sx={{
+              fontSize: 25,
+              textAlign: "center",
+              color: "#05c605",
+              fontWeight: "bold",
+            }}
+          >
+            Your Order has been successfully completed!
+          </Typography>
+        </DialogContent>
       </Dialog>
     </Box>
   );

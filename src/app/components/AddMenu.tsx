@@ -22,6 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createMenu } from "../actions/menu/createMenu";
 import useLocalStorage from "@/utils/useLocalStorage";
 import Image from "next/image";
+import { Check } from "lucide-react";
 
 export default function AddMenu() {
   const initialToppings = [
@@ -403,20 +404,59 @@ export default function AddMenu() {
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          sx: {
+            borderRadius: "20px",
+            overflow: "hidden",
+          },
+        }}
       >
-        <DialogTitle id="alert-dialog-title">{"Menu Created"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            The menu was successfully created!
-          </DialogContentText>
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 8,
+            gap: 4,
+          }}
+        >
+          <Box
+            sx={{
+              width: 200,
+              height: 200,
+              backgroundColor: "#e6f9e6",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: 120,
+                height: 120,
+                backgroundColor: "#05c605",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Check color="white" size={100} />
+            </Box>
+          </Box>
+          <Typography
+            sx={{
+              fontSize: 25,
+              textAlign: "center",
+              color: "#05c605",
+              fontWeight: "bold",
+            }}
+          >
+            You have uploaded the pizza successfully!
+          </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} autoFocus>
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );
