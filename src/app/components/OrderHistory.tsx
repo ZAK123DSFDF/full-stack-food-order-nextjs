@@ -3,14 +3,15 @@ import { Box, Button, Typography } from "@mui/material";
 import Card from "./Card";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useNProgress } from "@/provider/Progress";
 
 export default function OrderHistory() {
   const router = useRouter();
-  const handlePizza = () => {
-    router.push("/");
-  };
+  const { startProgress, stopProgress } = useNProgress();
   const handleHome = () => {
+    startProgress();
     router.push("/");
+    stopProgress("/");
   };
   return (
     <Box
@@ -30,6 +31,7 @@ export default function OrderHistory() {
           alignItems: "center",
           paddingX: 5,
         }}
+        onClick={handleHome}
       >
         <Box sx={{ display: "flex", gap: 1 }}>
           <Image

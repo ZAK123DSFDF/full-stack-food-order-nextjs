@@ -4,8 +4,17 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { createUser } from "../actions/user/createUser";
 import { useMutation } from "@tanstack/react-query";
+import { useNProgress } from "@/provider/Progress";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
+  const router = useRouter();
+  const { startProgress, stopProgress } = useNProgress();
+  const handleLogin = () => {
+    startProgress();
+    router.push("/login");
+    stopProgress("/login");
+  };
   const {
     register,
     handleSubmit,
@@ -32,12 +41,14 @@ export default function Signup() {
       console.log(data);
       const { password, ...userData } = data.user;
       localStorage.setItem("user", JSON.stringify(userData));
+      startProgress();
       window.location.href = "/";
+      stopProgress("/");
     },
   });
   const onSubmit = async (data: any) => {
     try {
-      await mutate(data);
+      mutate(data);
       reset();
     } catch (err) {
       console.error("Signup failed:", err);
@@ -211,12 +222,12 @@ export default function Signup() {
             </Button>
             <Typography sx={{ alignSelf: "center" }}>
               Have an account?{" "}
-              <Link
+              <span
                 style={{ color: "blue", cursor: "pointer" }}
-                href={"/login"}
+                onClick={handleLogin}
               >
                 Login
-              </Link>
+              </span>
             </Typography>
           </Box>
         </Box>

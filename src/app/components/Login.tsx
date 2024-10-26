@@ -4,10 +4,19 @@ import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 import { getLogin } from "../actions/user/getLogin";
+import { useNProgress } from "@/provider/Progress";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
+  const { startProgress, stopProgress } = useNProgress();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const handleSignup = () => {
+    startProgress();
+    router.push("/signup");
+    stopProgress("/signup");
+  };
   const { mutate, isPending, isError } = useMutation({
     mutationFn: getLogin,
     onSuccess: (data) => {
@@ -15,9 +24,13 @@ export default function Signup() {
       const { password, ...userData } = data.user;
       localStorage.setItem("user", JSON.stringify(userData));
       if (data.user.role === "CUSTOMER") {
+        startProgress();
         window.location.href = "/";
+        stopProgress("/");
       } else if (data.user.role === "SERVANT" || data.user.role === "ADMIN") {
+        startProgress();
         window.location.href = "/dashboard/orders";
+        stopProgress("/dashboard/orders");
       }
     },
   });
@@ -151,12 +164,12 @@ export default function Signup() {
             )}
             <Typography sx={{ alignSelf: "center" }}>
               dont Have an account?{" "}
-              <Link
+              <span
                 style={{ color: "blue", cursor: "pointer" }}
-                href={"/signup"}
+                onClick={handleSignup}
               >
                 Signup
-              </Link>
+              </span>
             </Typography>
           </Box>
         </Box>

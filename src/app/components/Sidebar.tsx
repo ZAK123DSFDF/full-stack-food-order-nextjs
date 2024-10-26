@@ -14,8 +14,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getLogout } from "../actions/user/getLogout";
 import Image from "next/image";
+import { useNProgress } from "@/provider/Progress";
 
 export default function Sidebar() {
+  const { startProgress, stopProgress } = useNProgress();
   const pathName = usePathname();
   const pathArray = pathName.split("/");
   const [path, setPath] = useState("");
@@ -24,16 +26,20 @@ export default function Sidebar() {
     setPath(pathArray[2]);
   }, [pathName]);
   const handleNavigation = (route: any) => {
+    startProgress();
     router.push(route);
+    stopProgress(route);
   };
   const { mutate } = useMutation({
     mutationFn: getLogout,
     onSuccess: () => {
       localStorage.removeItem("user");
       window.location.href = "/login";
+      stopProgress("/login");
     },
   });
   const handleLogOut = () => {
+    startProgress();
     mutate();
   };
   return (
@@ -96,8 +102,8 @@ export default function Sidebar() {
       >
         <Box
           sx={{
-            backgroundColor: "transparent", // Remove background
-            borderBottom: "1px solid lightgray", // Add 1px soft gray border at the bottom
+            backgroundColor: "transparent",
+            borderBottom: "1px solid lightgray",
             width: "90%",
             height: 50,
             marginBottom: 2,

@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, IconButton, InputBase, Typography } from "@mui/material";
 import Image from "next/image";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 import {
   Facebook,
   Linkedin,
@@ -16,10 +18,13 @@ import Card from "./Card";
 import { usePathname, useRouter } from "next/navigation";
 import ScrollableData from "./ScrollableData";
 import SwiperComponent from "./Swiper";
+import { useNProgress } from "@/provider/Progress";
 
 export default function Home({ data }: any) {
   const [fontSize, setFontSize] = useState("8rem");
   const [subTextSize, setSubTextSize] = useState("1.5rem");
+  const { startProgress, stopProgress } = useNProgress();
+  NProgress.configure({ showSpinner: false });
   const handleResize = () => {
     const screenWidth = window.innerWidth;
     if (screenWidth < 450) {
@@ -52,14 +57,21 @@ export default function Home({ data }: any) {
   const router = useRouter();
   const handleNavigation = () => {
     if (data.isAuthenticated) {
+      startProgress();
       router.push("/orderHistory");
+      stopProgress("/orderHistory");
     } else {
+      startProgress();
       router.push("/login");
+      stopProgress("/login");
     }
   };
   const handleSignup = () => {
+    startProgress();
     router.push("/signup");
+    stopProgress("/signup");
   };
+
   const items = Array.from({ length: 10 }, (_, index) => (
     <Scrollable key={index} />
   ));

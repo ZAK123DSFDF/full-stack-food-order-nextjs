@@ -4,11 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { getAllMenus } from "../actions/menu/getAllMenus";
 import { useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getAllMenusExcluding } from "../actions/menu/getAllMenusExcluding";
 import { getOrderHistory } from "../actions/order/getOrderHistory";
-
+import { useNProgress } from "@/provider/Progress";
 export default function Card({ id, mode, data: data1, data2 }: any) {
+  const { startProgress, stopProgress } = useNProgress();
   const queryFn = async (): Promise<any[]> => {
     if (mode === "allData") {
       return getAllMenus();
@@ -31,11 +32,17 @@ export default function Card({ id, mode, data: data1, data2 }: any) {
       return;
     } else if (mode !== "orderHistory") {
       if (data1?.isAuthenticated) {
+        startProgress();
         router.push(`menuDetail/${id}`);
+        stopProgress(`menuDetail/${id}`);
       } else if (data2?.isAuthenticated) {
+        startProgress();
         router.push(`${id}`);
+        stopProgress(`${id}`);
       } else {
+        startProgress();
         router.push("/login");
+        stopProgress("/login");
       }
     }
   };
