@@ -5,6 +5,7 @@ import {
   useCallback,
   ReactNode,
   useEffect,
+  useLayoutEffect,
 } from "react";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Box, Button, IconButton, InputBase, Typography } from "@mui/material";
 import Image from "next/image";
 import NProgress from "nprogress";
@@ -21,35 +21,49 @@ import SwiperComponent from "./Swiper";
 import { useNProgress } from "@/provider/Progress";
 
 export default function Home({ data }: any) {
-  const [fontSize, setFontSize] = useState("8rem");
-  const [subTextSize, setSubTextSize] = useState("1.5rem");
+  const [init, setInit] = useState(false);
+  useEffect(() => {
+    setInit(true);
+  }, []);
+  const [screenWidth, setScreenWidth] = useState(
+    init ? window.innerWidth : 1200
+  );
   const { startProgress, stopProgress } = useNProgress();
   NProgress.configure({ showSpinner: false });
-  const handleResize = () => {
-    const screenWidth = window.innerWidth;
-    if (screenWidth < 450) {
-      setFontSize("2.5rem");
-      setSubTextSize("0.6rem");
-    } else if (screenWidth < 700) {
-      setFontSize("4.5rem");
-      setSubTextSize("1rem");
-    } else if (screenWidth < 850) {
-      setFontSize("6rem");
-      setSubTextSize("1.2rem");
-    } else if (screenWidth < 960) {
-      setFontSize("7rem");
-      setSubTextSize("1.25rem");
-    } else if (screenWidth < 1200) {
-      setFontSize("8rem");
-      setSubTextSize("1.5rem");
-    } else {
-      setFontSize("12rem");
-      setSubTextSize("2rem");
-    }
-  };
+  const fontSize =
+    screenWidth < 450
+      ? "2.5rem"
+      : screenWidth < 700
+      ? "4.5rem"
+      : screenWidth < 850
+      ? "6rem"
+      : screenWidth < 960
+      ? "7rem"
+      : screenWidth < 1200
+      ? "8rem"
+      : "12rem";
+
+  const subTextSize =
+    screenWidth < 450
+      ? "0.85rem"
+      : screenWidth < 700
+      ? "1rem"
+      : screenWidth < 850
+      ? "1.2rem"
+      : screenWidth < 960
+      ? "1.25rem"
+      : screenWidth < 1200
+      ? "1.5rem"
+      : "2rem";
+
   useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
     window.addEventListener("resize", handleResize);
     handleResize();
+
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -213,7 +227,12 @@ export default function Home({ data }: any) {
               <Typography
                 sx={{
                   fontSize: subTextSize,
-                  maxWidth: { xs: "250px", sm: "400px", md: "800px" },
+                  maxWidth: {
+                    xs: "300px",
+                    sm: "400px",
+                    md: "500px",
+                    xl: "800px",
+                  },
                   marginTop: 2,
                   color: "#1e1b18",
                 }}
