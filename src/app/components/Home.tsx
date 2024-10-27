@@ -21,53 +21,9 @@ import SwiperComponent from "./Swiper";
 import { useNProgress } from "@/provider/Progress";
 
 export default function Home({ data }: any) {
-  const [init, setInit] = useState(false);
-  useEffect(() => {
-    setInit(true);
-  }, []);
-  const [screenWidth, setScreenWidth] = useState(
-    init ? window.innerWidth : 1200
-  );
   const { startProgress, stopProgress } = useNProgress();
   NProgress.configure({ showSpinner: false });
-  const fontSize =
-    screenWidth < 450
-      ? "2.5rem"
-      : screenWidth < 700
-      ? "4.5rem"
-      : screenWidth < 850
-      ? "6rem"
-      : screenWidth < 960
-      ? "7rem"
-      : screenWidth < 1200
-      ? "8rem"
-      : "12rem";
 
-  const subTextSize =
-    screenWidth < 450
-      ? "0.85rem"
-      : screenWidth < 700
-      ? "1rem"
-      : screenWidth < 850
-      ? "1.2rem"
-      : screenWidth < 960
-      ? "1.25rem"
-      : screenWidth < 1200
-      ? "1.5rem"
-      : "2rem";
-
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
   const router = useRouter();
   const handleNavigation = () => {
     if (data.isAuthenticated) {
@@ -211,7 +167,13 @@ export default function Home({ data }: any) {
               <Typography
                 variant="h1"
                 sx={{
-                  fontSize: fontSize,
+                  fontSize: {
+                    xs: "3.5rem",
+                    sm: "6rem",
+                    md: "8rem",
+                    lg: "12rem",
+                    xl: "12rem",
+                  },
                   fontWeight: 800,
                   textAlign: "center",
                   whiteSpace: "nowrap",
@@ -226,12 +188,19 @@ export default function Home({ data }: any) {
               </Typography>
               <Typography
                 sx={{
-                  fontSize: subTextSize,
+                  fontSize: {
+                    xs: "1rem",
+                    sm: "1.3rem",
+                    md: "1.6rem",
+                    lg: "2rem",
+                    xl: "2rem",
+                  },
                   maxWidth: {
-                    xs: "300px",
+                    xs: "250px",
                     sm: "400px",
                     md: "500px",
                     xl: "800px",
+                    lg: "800px",
                   },
                   marginTop: 2,
                   color: "#1e1b18",
