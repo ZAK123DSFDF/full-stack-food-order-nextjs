@@ -25,7 +25,7 @@ export default function Card({ id, mode, data: data1, data2 }: any) {
     queryKey: ["menus", mode],
     queryFn,
   });
-
+  console.log(data);
   const router = useRouter();
   const handleNavigation: any = (id: any) => {
     if (mode === "orderHistory") {
@@ -80,6 +80,7 @@ export default function Card({ id, mode, data: data1, data2 }: any) {
                 padding: 3,
                 borderRadius: "10px",
                 boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                marginBottom: 1,
               }}
             >
               <>
@@ -154,7 +155,7 @@ export default function Card({ id, mode, data: data1, data2 }: any) {
                         mode === "orderHistory" ? "transparent" : "#e57b0f",
                       color:
                         mode === "orderHistory"
-                          ? menu?.menu.orderStatus !== "DELIVERED"
+                          ? menu.orderStatus !== "DELIVERED"
                             ? "#ffa500"
                             : "#008000"
                           : "white",
@@ -165,13 +166,17 @@ export default function Card({ id, mode, data: data1, data2 }: any) {
                     }}
                   >
                     {mode === "orderHistory" ? (
-                      menu?.menu?.orderStatus !== "DELIVERED" ? (
-                        <Typography sx={{ fontWeight: "bold" }}>
-                          ORDERED
+                      menu?.orderStatus === "DELIVERED" ? (
+                        <Typography
+                          sx={{ fontWeight: "bold", textTransform: "none" }}
+                        >
+                          Ordered
                         </Typography>
                       ) : (
-                        <Typography sx={{ fontWeight: "bold" }}>
-                          RECEIVED
+                        <Typography
+                          sx={{ fontWeight: "bold", textTransform: "none" }}
+                        >
+                          Received
                         </Typography>
                       )
                     ) : (

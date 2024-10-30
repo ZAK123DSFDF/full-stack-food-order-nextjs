@@ -69,6 +69,23 @@ export default function MenuDetail({ data: data2 }: any) {
         height: "100vh",
         overflow: "scroll",
         backgroundColor: "#fff8f1",
+        "&::-webkit-scrollbar": {
+          width: "6px",
+          height: "6px",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
+          borderRadius: "10px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        },
+        "&::-webkit-scrollbar-corner": {
+          backgroundColor: "transparent",
+        },
       }}
     >
       <Box
@@ -131,10 +148,28 @@ export default function MenuDetail({ data: data2 }: any) {
               gap: 2,
               justifyContent: "flex-start",
               alignItems: "flex-start",
+              overflowX: "hidden",
               overflowY: { xs: "auto", sm: "auto", md: "auto" },
               height: { xs: "auto", sm: "300px", md: "500px" },
               maxWidth: { xs: "100%", md: "200px" },
               marginTop: { md: 4 },
+              "&::-webkit-scrollbar": {
+                width: "6px",
+                height: "6px",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "transparent",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                borderRadius: "10px",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+              },
+              "&::-webkit-scrollbar-corner": {
+                backgroundColor: "transparent",
+              },
             }}
           >
             {data?.Picture.map((img: any, index: any) => (
@@ -319,6 +354,23 @@ export default function MenuDetail({ data: data2 }: any) {
             justifyContent: "flex-start",
             overflow: "auto",
             marginBottom: 4,
+            "&::-webkit-scrollbar": {
+              width: "6px",
+              height: "6px",
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "transparent",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              borderRadius: "10px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            },
+            "&::-webkit-scrollbar-corner": {
+              backgroundColor: "transparent",
+            },
           }}
         >
           <Card mode="menuDetails" id={params.id} data2={data2} />

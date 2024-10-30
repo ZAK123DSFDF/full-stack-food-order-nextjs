@@ -15,8 +15,7 @@ import {
 } from "lucide-react";
 import Scrollable from "./Scrollable";
 import Card from "./Card";
-import { usePathname, useRouter } from "next/navigation";
-import ScrollableData from "./ScrollableData";
+import { useRouter } from "next/navigation";
 import SwiperComponent from "./Swiper";
 import { useNProgress } from "@/provider/Progress";
 
@@ -56,6 +55,23 @@ export default function Home({ data }: any) {
           background:
             "linear-gradient(to bottom, transparent 10%, rgba(229, 123, 15, 0.6) 50%, transparent 90%)",
           gap: 1,
+          "&::-webkit-scrollbar": {
+            width: "6px",
+            height: "6px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            borderRadius: "10px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+          "&::-webkit-scrollbar-corner": {
+            backgroundColor: "transparent",
+          },
         }}
       >
         <Box
@@ -303,18 +319,21 @@ export default function Home({ data }: any) {
             overflow: "auto",
             gap: 5,
             "&::-webkit-scrollbar": {
-              height: "8px",
-              background: "transparent",
+              width: "6px",
+              height: "6px",
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "transparent",
             },
             "&::-webkit-scrollbar-thumb": {
-              background: "rgba(0, 0, 0, 0.5)",
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
               borderRadius: "10px",
             },
             "&::-webkit-scrollbar-thumb:hover": {
-              background: "rgba(0, 0, 0, 0.7)",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
             },
-            "&::-webkit-scrollbar-track": {
-              background: "transparent",
+            "&::-webkit-scrollbar-corner": {
+              backgroundColor: "transparent",
             },
           }}
         >

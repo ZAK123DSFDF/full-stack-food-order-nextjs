@@ -3,12 +3,9 @@ import {
   Box,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
   Select,
   Typography,
@@ -416,23 +413,6 @@ export default function Orders() {
             boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
             borderRadius: "5px",
             padding: 2,
-            "&::-webkit-scrollbar": {
-              width: "6px",
-              height: "6px",
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: "transparent",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-              borderRadius: "0",
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-            },
-            "&::-webkit-scrollbar-corner": {
-              backgroundColor: "transparent",
-            },
           }}
         >
           {hasPermissionToViewOrders && !loading ? (

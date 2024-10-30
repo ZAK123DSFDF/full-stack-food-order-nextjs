@@ -16,6 +16,7 @@ export default function Scrollable() {
         alignItems: "center",
         gap: 2,
         flexShrink: 0,
+        marginBottom: 1,
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
