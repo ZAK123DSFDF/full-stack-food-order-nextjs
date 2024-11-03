@@ -1,10 +1,15 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { verifyToken } from "./verifyToken";
+import { verifyToken } from "./verifyToken.ts";
 
-export async function decodedToken() {
+export async function decodedToken(providedToken?: string) {
   try {
-    const token = await verifyToken();
-    const decodedToken = jwt.decode(token) as JwtPayload | null;
+    let decodedToken;
+    if (providedToken) {
+      decodedToken = jwt.decode(providedToken) as JwtPayload | null;
+    } else {
+      const token = await verifyToken();
+      decodedToken = jwt.decode(token) as JwtPayload | null;
+    }
 
     if (!decodedToken || typeof decodedToken === "string") {
       throw new Error("Invalid token");

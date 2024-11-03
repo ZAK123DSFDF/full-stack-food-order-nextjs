@@ -1,30 +1,38 @@
 "use server";
-import { prisma } from "../../../lib/prisma";
-import { verifyToken } from "@/utils/verifyToken";
-import { decodedToken } from "@/utils/decodeToken";
-import { defineAbilitiesFor } from "@/casl/abilities";
-import { checkAbilities } from "@/casl/checkAbilities";
-import { AllowedActions } from "@/utils/enum";
-import { All } from "@/classes/All";
-import { Orders } from "@/classes/Orders";
+import { prisma } from "../../../lib/prisma.ts";
+import { verifyToken } from "../../../utils/verifyToken.ts";
+import { decodedToken } from "../../../utils/decodeToken.ts";
+import { defineAbilitiesFor } from "../../../casl/abilities.ts";
+import { checkAbilities } from "../../../casl/checkAbilities.ts";
+import { AllowedActions } from "../../../utils/enum.ts";
+import { All } from "../../../classes/All.ts";
+import { Orders } from "../../../classes/Orders.ts";
 export const getRestaurantOrders = async (
-  globalSearch: string,
-  orderStatus: string,
-  menuName: string,
-  count: string,
-  price: string,
-  createdAt: string,
-  customerName: string,
-  customerEmail: string,
-  customerPhoneNumber: string,
-  customerLocation: string,
-  sortBy: string,
-  sortOrder: string
+  providedToken?: string,
+  globalSearch?: string,
+  orderStatus?: string,
+  menuName?: string,
+  count?: string,
+  price?: string,
+  createdAt?: string,
+  customerName?: string,
+  customerEmail?: string,
+  customerPhoneNumber?: string,
+  customerLocation?: string,
+  sortBy?: string,
+  sortOrder?: string
 ) => {
   try {
-    await verifyToken();
-    const token = await decodedToken();
-    const ability = await defineAbilitiesFor(token);
+    let token;
+    let ability;
+    if (providedToken) {
+      token = await decodedToken(providedToken);
+      ability = await defineAbilitiesFor(token);
+    } else {
+      await verifyToken();
+      token = await decodedToken();
+      ability = await defineAbilitiesFor(token);
+    }
     if (
       (await checkAbilities(ability, AllowedActions.ALL, All)) ||
       (await checkAbilities(ability, AllowedActions.SEE_ORDERS, Orders))
@@ -204,7 +212,6 @@ export const getRestaurantOrders = async (
       if (orders.length === 0) {
         throw new Error("Order not found");
       }
-      console.log("Orders found:", orders);
       return orders;
     } else {
       throw new Error("you are not authorize to do this action");

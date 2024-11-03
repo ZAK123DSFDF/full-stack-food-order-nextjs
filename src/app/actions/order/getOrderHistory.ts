@@ -1,17 +1,25 @@
 "use server";
-import { prisma } from "../../../lib/prisma";
-import { verifyToken } from "@/utils/verifyToken";
-import { decodedToken } from "@/utils/decodeToken";
-import { defineAbilitiesFor } from "@/casl/abilities";
-import { AllowedActions } from "@/utils/enum";
-import { OrderHistory } from "@/classes/OrderHistory";
-import { checkAbilities } from "@/casl/checkAbilities";
+import { prisma } from "../../../lib/prisma.ts";
+import { verifyToken } from "../../../utils/verifyToken.ts";
+import { decodedToken } from "../../../utils/decodeToken.ts";
+import { defineAbilitiesFor } from "../../../casl/abilities.ts";
+import { AllowedActions } from "../../../utils/enum.ts";
+import { OrderHistory } from "../../../classes/OrderHistory.ts";
+import { checkAbilities } from "../../../casl/checkAbilities.ts";
 
-export const getOrderHistory = async () => {
+export const getOrderHistory = async (providedToken?: string) => {
   try {
-    await verifyToken();
-    const token = await decodedToken();
-    const ability = await defineAbilitiesFor(token);
+    let token;
+    let ability;
+    if (providedToken) {
+      token = await decodedToken(providedToken);
+      ability = await defineAbilitiesFor(token);
+    } else {
+      await verifyToken();
+      token = await decodedToken();
+      ability = await defineAbilitiesFor(token);
+    }
+
     if (
       await checkAbilities(ability, AllowedActions.ORDER_HISTORY, OrderHistory)
     ) {

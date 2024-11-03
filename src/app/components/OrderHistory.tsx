@@ -23,6 +23,23 @@ export default function OrderHistory() {
         width: "100vw",
         height: "100vh",
         overflow: "auto",
+        "&::-webkit-scrollbar": {
+          width: "6px",
+          height: "6px",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
+          borderRadius: "10px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        },
+        "&::-webkit-scrollbar-corner": {
+          backgroundColor: "transparent",
+        },
       }}
     >
       <Box

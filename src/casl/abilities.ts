@@ -1,15 +1,15 @@
 "use server";
-import { All } from "@/classes/All";
+import { All } from "../classes/All.ts";
 
-import { OrderHistory } from "@/classes/OrderHistory";
-import { AllowedActions } from "@/utils/enum";
+import { OrderHistory } from "../classes/OrderHistory.ts";
+import { AllowedActions } from "../utils/enum.ts";
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
-import { prisma } from "@/lib/prisma";
-import { Orders } from "@/classes/Orders";
-import { Menu } from "@/classes/Menu";
-import { Role } from "@/classes/Role";
-import { Users } from "@/classes/Users";
-import { createOrderCus } from "@/classes/createOrder";
+import { prisma } from "../lib/prisma.ts";
+import { Orders } from "../classes/Orders.ts";
+import { Menu } from "../classes/Menu.ts";
+import { Role } from "../classes/Role.ts";
+import { Users } from "../classes/Users.ts";
+import { createOrderCus } from "../classes/createOrder.ts";
 export async function defineAbilitiesFor(user: any) {
   const { can, cannot, build } = new AbilityBuilder(createMongoAbility);
 

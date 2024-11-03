@@ -253,6 +253,9 @@ export default function Orders() {
       baseColumns.push({
         accessorKey: "orderStatus",
         header: "Order Status",
+        //@ts-ignore
+        filterSelectOptions: ["PREPARING", "READY", "DELIVERED"],
+        filterVariant: "select",
         enableSorting: false,
         Cell: ({ row }: any) => {
           const rowIndex = row.index;

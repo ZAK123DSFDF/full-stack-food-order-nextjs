@@ -1,9 +1,9 @@
 "use server";
-import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
 export async function verifyToken() {
   try {
+    const { cookies } = await import("next/headers");
     const tokenCookie = cookies().get("token");
     const token = tokenCookie?.value;
     if (!token) {

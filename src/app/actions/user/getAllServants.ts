@@ -1,26 +1,34 @@
 "use server";
-import { prisma } from "../../../lib/prisma";
-import { verifyToken } from "@/utils/verifyToken";
-import { decodedToken } from "@/utils/decodeToken";
-import { defineAbilitiesFor } from "@/casl/abilities";
-import { checkAbilities } from "@/casl/checkAbilities";
-import { AllowedActions } from "@/utils/enum";
-import { All } from "@/classes/All";
-import { Users } from "@/classes/Users";
+import { prisma } from "../../../lib/prisma.ts";
+import { verifyToken } from "../../../utils/verifyToken.ts";
+import { decodedToken } from "../../../utils/decodeToken.ts";
+import { defineAbilitiesFor } from "../../../casl/abilities.ts";
+import { checkAbilities } from "../../../casl/checkAbilities.ts";
+import { AllowedActions } from "../../../utils/enum.ts";
+import { All } from "../../../classes/All.ts";
+import { Users } from "../../../classes/Users.ts";
 export const getAllServants = async (
-  globalSearch: any,
-  name: any,
-  phoneNumber: any,
-  email: any,
-  location: any,
-  active: any,
-  sortBy: any,
-  sortOrder: any
+  providedToken?: string,
+  globalSearch?: any,
+  name?: any,
+  phoneNumber?: any,
+  email?: any,
+  location?: any,
+  active?: any,
+  sortBy?: any,
+  sortOrder?: any
 ) => {
   try {
-    await verifyToken();
-    const token = await decodedToken();
-    const ability = await defineAbilitiesFor(token);
+    let token;
+    let ability;
+    if (providedToken) {
+      token = await decodedToken(providedToken);
+      ability = await defineAbilitiesFor(token);
+    } else {
+      await verifyToken();
+      token = await decodedToken();
+      ability = await defineAbilitiesFor(token);
+    }
     if (
       (await checkAbilities(ability, AllowedActions.ALL, All)) ||
       (await checkAbilities(ability, AllowedActions.GET_USERS, Users))

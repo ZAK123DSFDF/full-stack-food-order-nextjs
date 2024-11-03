@@ -1,16 +1,16 @@
 "use server";
 
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../../lib/prisma.ts";
 import sharp from "sharp";
-import { uploadToCloudinary } from "../../../lib/cloudinary";
+import { uploadToCloudinary } from "../../../lib/cloudinary.ts";
 import { z } from "zod";
-import { verifyToken } from "@/utils/verifyToken";
-import { decodedToken } from "@/utils/decodeToken";
-import { defineAbilitiesFor } from "@/casl/abilities";
-import { checkAbilities } from "@/casl/checkAbilities";
-import { AllowedActions } from "@/utils/enum";
-import { All } from "@/classes/All";
-import { Menu } from "@/classes/Menu";
+import { verifyToken } from "@/utils/verifyToken.ts";
+import { decodedToken } from "@/utils/decodeToken.ts";
+import { defineAbilitiesFor } from "@/casl/abilities.ts";
+import { checkAbilities } from "@/casl/checkAbilities.ts";
+import { AllowedActions } from "@/utils/enum.ts";
+import { All } from "@/classes/All.ts";
+import { Menu } from "@/classes/Menu.ts";
 
 export const createMenu = async (formData: FormData) => {
   try {
