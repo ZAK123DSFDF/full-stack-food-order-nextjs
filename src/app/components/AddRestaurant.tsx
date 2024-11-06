@@ -35,7 +35,7 @@ export default function Signup() {
       phoneNumber: "",
       restaurantLocation: "",
       restaurantName: "",
-      image: null, // for storing the uploaded file
+      image: null,
     },
     mode: "onBlur",
   });
@@ -68,9 +68,7 @@ export default function Signup() {
   };
 
   const [file, setFile] = useState<any>(null);
-  const [isClient, setIsClient] = useState(false); // To check if client-side rendering has occurred
-
-  // Set `isClient` to true only on the client
+  const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);

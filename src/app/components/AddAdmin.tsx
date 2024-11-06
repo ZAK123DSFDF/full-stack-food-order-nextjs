@@ -3,9 +3,7 @@ import {
   Box,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   TextField,
   Typography,
 } from "@mui/material";
@@ -31,7 +29,7 @@ export default function Signup() {
       phoneNumber: "",
       location: "",
     },
-    mode: "onBlur",
+    // mode: "onBlur",
   });
   const [openDialog, setOpenDialog] = useState(false);
   const password = watch("password");
