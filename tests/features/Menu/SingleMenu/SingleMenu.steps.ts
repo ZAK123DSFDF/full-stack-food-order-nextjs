@@ -1,5 +1,5 @@
 "use server";
-import { getSingleMenu } from "../../../src/app/actions/menu/getSingleMenu.ts";
+import { getSingleMenu } from "../../../../src/app/actions/menu/getSingleMenu.ts";
 import { Then } from "@cucumber/cucumber";
 Then("I should get single menu", async function () {
   try {

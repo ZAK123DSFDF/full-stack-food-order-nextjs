@@ -1,5 +1,5 @@
 "use server";
-import { getAllMenus } from "../../../src/app/actions/menu/getAllMenus.ts";
+import { getAllMenus } from "../../../../src/app/actions/menu/getAllMenus.ts";
 import { Then } from "@cucumber/cucumber";
 
 Then("I should get All menus", async function () {

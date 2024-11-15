@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
-  paths: ["./features/**/*.feature"],
+  paths: ["tests/features/**/*.feature"],
   requireModule: ["ts-node/register", "tsconfig-paths/register"],
-  import: ["./features/**/*.ts"],
+  import: ["tests/features/**/*.ts"],
   loader: ["ts-node/esm"],
 };

@@ -1,5 +1,5 @@
 "use server";
-import { getOrderHistory } from "../../../src/app/actions/order/getOrderHistory.ts";
+import { getOrderHistory } from "../../../../src/app/actions/order/getOrderHistory.ts";
 import { Then } from "@cucumber/cucumber";
 
 Then("I should get order history", async function () {

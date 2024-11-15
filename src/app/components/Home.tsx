@@ -18,6 +18,8 @@ import Card from "./Card";
 import { useRouter } from "next/navigation";
 import SwiperComponent from "./Swiper";
 import { useNProgress } from "@/provider/Progress";
+import { useMutation } from "@tanstack/react-query";
+import { getLogout } from "../actions/user/getLogout";
 
 export default function Home({ data }: any) {
   const { startProgress, stopProgress } = useNProgress();
@@ -35,10 +37,26 @@ export default function Home({ data }: any) {
       stopProgress("/login");
     }
   };
+  const { mutate } = useMutation({
+    mutationFn: getLogout,
+    onSuccess: () => {
+      localStorage.removeItem("user");
+      stopProgress("/");
+    },
+  });
+  const handleLogOut = () => {
+    startProgress();
+    mutate();
+  };
   const handleSignup = () => {
     startProgress();
     router.push("/signup");
     stopProgress("/signup");
+  };
+  const handleLogin = () => {
+    startProgress();
+    router.push("/login");
+    stopProgress("login");
   };
 
   const items = Array.from({ length: 10 }, (_, index) => (
@@ -138,24 +156,61 @@ export default function Home({ data }: any) {
               Who we are
             </Typography>
           </Box>
-          <Button
-            onClick={handleSignup}
-            sx={{
-              cursor: "pointer",
-              backgroundColor: "#ff890f",
-              color: "white",
-              fontWeight: "bold",
-              fontSize: { xs: 10, md: 25 },
-              display: { xs: "none", lg: "flex" },
-              padding: "10px 20px",
-              borderRadius: "5px",
-              "&:hover": {
-                backgroundColor: "#e57b0f",
-              },
-            }}
-          >
-            Register
-          </Button>
+          {data.isAuthenticated ? (
+            <Button
+              onClick={handleLogOut}
+              sx={{
+                cursor: "pointer",
+                backgroundColor: "#ff890f",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: { xs: 10, md: 25 },
+                display: { xs: "none", lg: "flex" },
+                padding: "10px 20px",
+                borderRadius: "5px",
+                "&:hover": {
+                  backgroundColor: "#e57b0f",
+                },
+              }}
+            >
+              LogOut
+            </Button>
+          ) : (
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                onClick={handleLogin}
+                sx={{
+                  cursor: "pointer",
+                  color: "#ff890f",
+                  fontWeight: "bold",
+                  fontSize: { xs: 10, md: 25 },
+                  display: { xs: "none", lg: "flex" },
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={handleSignup}
+                sx={{
+                  cursor: "pointer",
+                  backgroundColor: "#ff890f",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: { xs: 10, md: 25 },
+                  display: { xs: "none", lg: "flex" },
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  "&:hover": {
+                    backgroundColor: "#e57b0f",
+                  },
+                }}
+              >
+                Register
+              </Button>
+            </Box>
+          )}
         </Box>
         <Box
           sx={{

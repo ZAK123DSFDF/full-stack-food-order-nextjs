@@ -130,6 +130,7 @@ export default function Signup() {
             }}
           >
             <TextField
+              id="email"
               label="Email"
               variant="outlined"
               value={email}
@@ -138,6 +139,7 @@ export default function Signup() {
               fullWidth
             />
             <TextField
+              id="password"
               label="Password"
               variant="outlined"
               value={password}
@@ -146,6 +148,7 @@ export default function Signup() {
               fullWidth
             />
             <Button
+              id="login"
               variant="contained"
               type="submit"
               sx={{
