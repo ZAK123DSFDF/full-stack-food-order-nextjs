@@ -29,7 +29,7 @@ export default function Signup() {
       phoneNumber: "",
       location: "",
     },
-    // mode: "onBlur",
+    mode: "onBlur",
   });
   const [openDialog, setOpenDialog] = useState(false);
   const password = watch("password");
