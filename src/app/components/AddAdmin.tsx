@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import {
   Box,
   Button,
@@ -6,12 +6,12 @@ import {
   DialogContent,
   TextField,
   Typography,
-} from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { addAdmin } from "../actions/restaurant/addAdmin";
-import { useState } from "react";
-import { Check } from "lucide-react";
+} from "@mui/material"
+import { useMutation } from "@tanstack/react-query"
+import { useForm } from "react-hook-form"
+import { addAdmin } from "../actions/restaurant/addAdmin"
+import { useState } from "react"
+import { Check } from "lucide-react"
 
 export default function Signup() {
   const {
@@ -29,18 +29,18 @@ export default function Signup() {
       phoneNumber: "",
       location: "",
     },
-    mode: "onBlur",
-  });
-  const [openDialog, setOpenDialog] = useState(false);
-  const password = watch("password");
+    // mode: "onBlur",
+  })
+  const [openDialog, setOpenDialog] = useState(false)
+  const password = watch("password")
   const { mutate, isPending } = useMutation({
     mutationFn: addAdmin,
     onSuccess: (data) => {
-      console.log(data);
-      reset();
-      setOpenDialog(true);
+      console.log(data)
+      reset()
+      setOpenDialog(true)
     },
-  });
+  })
   const onSubmit = (data: any) => {
     mutate({
       name: data.name,
@@ -48,12 +48,12 @@ export default function Signup() {
       password: data.password,
       phoneNumber: data.phoneNumber,
       location: data.location,
-    });
-  };
+    })
+  }
 
   const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+    setOpenDialog(false)
+  }
   return (
     <Box
       sx={{
@@ -298,5 +298,5 @@ export default function Signup() {
         </DialogContent>
       </Dialog>
     </Box>
-  );
+  )
 }
