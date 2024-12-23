@@ -1,46 +1,47 @@
-"use client";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
-import Link from "next/link";
-import { useState } from "react";
-import { getLogin } from "../actions/user/getLogin";
-import { useNProgress } from "@/provider/Progress";
-import { useRouter } from "next/navigation";
+"use client"
+import { Box, Button, TextField, Typography } from "@mui/material"
+import { useMutation } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { getLogin } from "../actions/user/getLogin"
+import { useNProgress } from "@/provider/Progress"
+import { useRouter } from "next/navigation"
 
 export default function Signup() {
-  const { startProgress, stopProgress } = useNProgress();
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { startProgress, stopProgress } = useNProgress()
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
   const handleSignup = () => {
-    startProgress();
-    router.push("/signup");
-    stopProgress("/signup");
-  };
-  const { mutate, isPending, isError } = useMutation({
+    startProgress()
+    router.push("/signup")
+    stopProgress("/signup")
+  }
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: getLogin,
-    onSuccess: (data) => {
-      console.log(data);
-      const { password, ...userData } = data.user;
-      localStorage.setItem("user", JSON.stringify(userData));
+    onSuccess: (data: any) => {
+      const { password, ...userData } = data.user
+      localStorage.setItem("user", JSON.stringify(userData))
       if (data.user.role === "CUSTOMER") {
-        startProgress();
-        window.location.href = "/";
-        stopProgress("/");
+        startProgress()
+        window.location.href = "/"
+        stopProgress("/")
       } else if (data.user.role === "SERVANT" || data.user.role === "ADMIN") {
-        startProgress();
-        window.location.href = "/dashboard/orders";
-        stopProgress("/dashboard/orders");
+        startProgress()
+        window.location.href = "/dashboard/orders"
+        stopProgress("/dashboard/orders")
       }
     },
-  });
+  })
+
+  console.log("this is the error", isError, error)
   const loginHandle = (e: any) => {
-    e.preventDefault();
-    console.log(email, password);
-    mutate({ email, password });
-    setEmail("");
-    setPassword("");
-  };
+    e.preventDefault()
+    console.log(email, password)
+    mutate({ email, password })
+    setEmail("")
+    setPassword("")
+  }
   return (
     <Box
       sx={{
@@ -162,7 +163,7 @@ export default function Signup() {
             </Button>
             {isError && (
               <Typography sx={{ color: "red" }}>
-                credentials not correct
+                {error.message as any}
               </Typography>
             )}
             <Typography sx={{ alignSelf: "center" }}>
@@ -178,5 +179,5 @@ export default function Signup() {
         </Box>
       </Box>
     </Box>
-  );
+  )
 }
