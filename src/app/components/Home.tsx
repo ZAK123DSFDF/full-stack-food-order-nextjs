@@ -1,9 +1,9 @@
-"use client";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { Box, Button, IconButton, InputBase, Typography } from "@mui/material";
-import Image from "next/image";
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+"use client"
+import React, { useState, useEffect, useLayoutEffect } from "react"
+import { Box, Button, IconButton, InputBase, Typography } from "@mui/material"
+import Image from "next/image"
+import NProgress from "nprogress"
+import "nprogress/nprogress.css"
 import {
   Facebook,
   Linkedin,
@@ -12,56 +12,56 @@ import {
   Shield,
   Twitter,
   Youtube,
-} from "lucide-react";
-import Scrollable from "./Scrollable";
-import Card from "./Card";
-import { useRouter } from "next/navigation";
-import SwiperComponent from "./Swiper";
-import { useNProgress } from "@/provider/Progress";
-import { useMutation } from "@tanstack/react-query";
-import { getLogout } from "../actions/user/getLogout";
+} from "lucide-react"
+import Scrollable from "./Scrollable"
+import Card from "./Card"
+import { useRouter } from "next/navigation"
+import SwiperComponent from "./Swiper"
+import { useNProgress } from "@/provider/Progress"
+import { useMutation } from "@tanstack/react-query"
+import { getLogout } from "../actions/user/getLogout"
 
 export default function Home({ data }: any) {
-  const { startProgress, stopProgress } = useNProgress();
-  NProgress.configure({ showSpinner: false });
+  const { startProgress, stopProgress } = useNProgress()
+  NProgress.configure({ showSpinner: false })
 
-  const router = useRouter();
+  const router = useRouter()
   const handleNavigation = () => {
     if (data.isAuthenticated) {
-      startProgress();
-      router.push("/orderHistory");
-      stopProgress("/orderHistory");
+      startProgress()
+      router.push("/orderHistory")
+      stopProgress("/orderHistory")
     } else {
-      startProgress();
-      router.push("/login");
-      stopProgress("/login");
+      startProgress()
+      router.push("/login")
+      stopProgress("/login")
     }
-  };
+  }
   const { mutate } = useMutation({
     mutationFn: getLogout,
     onSuccess: () => {
-      localStorage.removeItem("user");
-      stopProgress("/");
+      localStorage.removeItem("user")
+      stopProgress("/")
     },
-  });
+  })
   const handleLogOut = () => {
-    startProgress();
-    mutate();
-  };
+    startProgress()
+    mutate()
+  }
   const handleSignup = () => {
-    startProgress();
-    router.push("/signup");
-    stopProgress("/signup");
-  };
+    startProgress()
+    router.push("/signup")
+    stopProgress("/signup")
+  }
   const handleLogin = () => {
-    startProgress();
-    router.push("/login");
-    stopProgress("login");
-  };
+    startProgress()
+    router.push("/login")
+    stopProgress("login")
+  }
 
   const items = Array.from({ length: 10 }, (_, index) => (
     <Scrollable key={index} />
-  ));
+  ))
   return (
     <>
       <Box
@@ -103,7 +103,7 @@ export default function Home({ data }: any) {
           <Box sx={{ display: "flex", gap: 1 }}>
             <Image
               loader={({ src }) => {
-                return src;
+                return src
               }}
               src="/pizzalogo.svg"
               width={30}
@@ -321,7 +321,7 @@ export default function Home({ data }: any) {
           </Box>
           <Image
             loader={({ src }) => {
-              return src;
+              return src
             }}
             src="/pizza.svg"
             loading="lazy"
@@ -513,7 +513,7 @@ export default function Home({ data }: any) {
         >
           <Image
             loader={({ src }) => {
-              return src;
+              return src
             }}
             src="/pizzalogo.svg"
             loading="lazy"
@@ -576,5 +576,5 @@ export default function Home({ data }: any) {
         </Box>
       </Box>
     </>
-  );
+  )
 }
