@@ -177,6 +177,18 @@ export default function Signup() {
             </Typography>
           </Box>
         </Box>
+          <Box>
+              <Typography>
+                  use this to login
+              </Typography>
+              <Typography>
+                  for the customer use qwe@gmail.com with password 123456
+              </Typography>
+              for the admin use zak2@gmail.com with password 123456
+              <Typography>
+                  for the servant use sdf@gmail.com with password 123456
+              </Typography>
+          </Box>
       </Box>
     </Box>
   )
