@@ -231,6 +231,9 @@ export default function Signup() {
             </Typography>
           </Box>
         </Box>
+          <Typography>
+              you can go to login page and login with the given data
+          </Typography>
       </Box>
     </Box>
   );
