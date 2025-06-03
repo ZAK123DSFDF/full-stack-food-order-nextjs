@@ -43,7 +43,6 @@ export const getLogin = async ({ email, password }: any) => {
       name: "token",
       value: token,
       httpOnly: true,
-      maxAge:undefined
     })
 
     return {
