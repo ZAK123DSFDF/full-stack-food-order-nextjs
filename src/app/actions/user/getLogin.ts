@@ -44,7 +44,11 @@ export const getLogin = async ({ email, password }: any) => {
       value: token,
       httpOnly: true,
     })
-
+    cookies().set({
+      name: "rememberMe",
+      value: JSON.stringify(false), // or true depending on user choice
+      httpOnly: true,
+    });
     return {
       user,
       token,
