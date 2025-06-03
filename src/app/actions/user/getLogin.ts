@@ -43,12 +43,8 @@ export const getLogin = async ({ email, password }: any) => {
       name: "token",
       value: token,
       httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30
     })
-    cookies().set({
-      name: "rememberMe",
-      value: JSON.stringify(false), // or true depending on user choice
-      httpOnly: true,
-    });
     return {
       user,
       token,
