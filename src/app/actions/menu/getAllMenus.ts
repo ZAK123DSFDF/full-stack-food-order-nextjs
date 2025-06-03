@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "../../../lib/prisma.ts";
+import { prisma } from "@/lib/prisma.ts";
 
 export const getAllMenus = async () => {
   try {
