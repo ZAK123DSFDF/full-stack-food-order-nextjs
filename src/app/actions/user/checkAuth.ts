@@ -8,8 +8,7 @@ export const checkAuth = async () => {
   if (!tokenCookie) {
     return { isAuthenticated: false };
   }
-  const rememberMe = rememberMeCookie ? JSON.parse(rememberMeCookie.value) : false;
-  if (!rememberMe) {
+  if (!rememberMeCookie) {
     // Delete token and rememberMe cookies
     cookies().delete("token");
     cookies().delete("rememberMe");
