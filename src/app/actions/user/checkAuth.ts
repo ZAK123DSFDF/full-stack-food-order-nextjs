@@ -8,13 +8,7 @@ export const checkAuth = async () => {
   if (!tokenCookie) {
     return { isAuthenticated: false };
   }
-  if (!rememberMeCookie) {
-    // Delete token and rememberMe cookies
-    cookies().delete("token");
-    cookies().delete("rememberMe");
 
-    return { isAuthenticated: false };
-  }
   const token = tokenCookie.value;
   const decoded = jwt.decode(token);
 
