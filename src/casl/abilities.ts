@@ -110,6 +110,7 @@ export async function defineAbilitiesFor(user: any) {
             } else {
               cannot(AllowedActions.GET_USERS, Users);
             }
+            break;
           case "GET_ROLES":
             if (userCheck?.active) {
               can(AllowedActions.GET_ROLES, Role);
