@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 export const checkAuth = async () => {
   const tokenCookie = cookies().get("token");
-  const rememberMeCookie = cookies().get("rememberMe");
   if (!tokenCookie) {
     return { isAuthenticated: false };
   }
