@@ -1,6 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload} from "jsonwebtoken";
 
 export const checkAuth = async () => {
   const tokenCookie = cookies().get("token");
@@ -9,8 +9,16 @@ export const checkAuth = async () => {
   }
 
   const token = tokenCookie.value;
-  const decoded = jwt.decode(token);
-
+  const decoded:any = jwt.decode(token);
+  if (!decoded) {
+    return { isAuthenticated: false };
+  }
+  const currentTime = Math.floor(Date.now() / 1000);
+  if (decoded.exp && currentTime > decoded.exp) {
+    // Optional: Clear expired token
+    cookies().delete("token");
+    return { isAuthenticated: false };
+  }
   if (decoded) {
     return {
       isAuthenticated: true,
