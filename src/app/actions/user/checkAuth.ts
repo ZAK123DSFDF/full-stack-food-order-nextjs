@@ -13,12 +13,6 @@ export const checkAuth = async () => {
   if (!decoded) {
     return { isAuthenticated: false };
   }
-  const currentTime = Math.floor(Date.now() / 1000);
-  if (decoded.exp && currentTime > decoded.exp) {
-    // Optional: Clear expired token
-    cookies().delete("token");
-    return { isAuthenticated: false };
-  }
   if (decoded) {
     return {
       isAuthenticated: true,
